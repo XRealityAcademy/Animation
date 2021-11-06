@@ -6,6 +6,7 @@ public class MovingDir : MonoBehaviour
 {
     private Animator animator;
 
+
     private bool upButtonPress = false;
     private bool rightButtonPress = false;
     private bool leftButtonPress = false;
@@ -25,18 +26,75 @@ public class MovingDir : MonoBehaviour
     {
         bool isWalking = animator.GetBool("isWalking");
         bool upPressing = upButtonPress;
+        bool rightPressing = rightButtonPress;
+        bool leftPressing = leftButtonPress;
+        bool downPressing = downButtonPress;
         
-        if ( upPressing)
+        
+        if (upPressing)
         {
+            //upButtonPress = false;
+            rightButtonPress = false;
+            leftButtonPress = false;
+            downButtonPress = false;
             // isWalking is true
             animator.SetBool("isWalking", true);
-            transform.position = transform.position + new Vector3( transform.forward * speed * Time.deltaTime);
+            Vector3 playerPosition = transform.position;
+            Vector3 playerDir = Vector3.forward;
+            transform.rotation = Quaternion.LookRotation(Vector3.forward);
+            //transform.Rotate(0,0,1);
+            transform.Translate(playerDir * (speed * Time.deltaTime), Space.World);
+            
+        } else if (rightPressing)
+        {
+            upButtonPress = false;
+            leftButtonPress = false;
+            downButtonPress = false;
+            Debug.Log("RightPRessing");
+            // isWalking is true
+            animator.SetBool("isWalking", true);
+            Vector3 playerPosition = transform.position;
+            Vector3 playerDir = Vector3.right;
+            transform.rotation = Quaternion.LookRotation(Vector3.right);
+            //transform.Rotate(1,0,0);
+            transform.Translate(playerDir * (speed * Time.deltaTime), Space.World);
+        } else if (leftPressing)
+        {
+            upButtonPress = false;
+            rightButtonPress = false;
+           // leftButtonPress = false;
+            downButtonPress = false;
+            // isWalking is true
+            animator.SetBool("isWalking", true);
+            Vector3 playerPosition = transform.position;
+            Vector3 playerDir = -Vector3.right;
+            //transform.Rotate(-1,0,0);
+            transform.Translate(playerDir * (speed * Time.deltaTime), Space.World);
         }
+        else if (downPressing)
+        {
+            upButtonPress = false;
+            rightButtonPress = false;
+            leftButtonPress = false;
+            //downButtonPress = false;
+            // isWalking is true
+            animator.SetBool("isWalking", true);
+            Vector3 playerPosition = transform.position;
+            Vector3 playerDir = -Vector3.forward;
+            //transform.Rotate(0,0,-1);
+            transform.Translate(playerDir * (speed * Time.deltaTime), Space.World);
+        }
+        
+
+
     }
 
     public void UpButtonPress()
     {
         upButtonPress = true;
+        rightButtonPress = false;
+        leftButtonPress = false;
+        downButtonPress = false;
         
     }
     public void DownButtonPress()
@@ -47,6 +105,10 @@ public class MovingDir : MonoBehaviour
     public void RightButtonPress()
     {
         rightButtonPress = true;
+        upButtonPress = false;
+
+        leftButtonPress = false;
+        downButtonPress = false;
         
     }
     public void LeftButtonPress()
